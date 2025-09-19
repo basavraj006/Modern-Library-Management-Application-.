@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Management System</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #bae6f1, #74b0ef);
+      color: #333;
+    }
+    header {
+      background: #0055aa;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .container {
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.408);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease-in-out;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+    }
+    h2, h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-top: 10px;
+      font-size: 15px;
+    }
+    button:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
+    input {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 14px;
+    }
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .form-group input {
+      flex: 1;
+      min-width: 180px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background: #3498db;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    tr:hover {
+      background: #f1f1f1;
+    }
+    .highlight-row {
+      background: #ffeaa7 !important;
+    }
+    .status-available {
+      color: green;
+      font-weight: bold;
+    }
+    .status-borrowed {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    📚 Library Management System
+  </header>
+
+  <div class="container">
+
+    <!-- Books Dashboard -->
+    <div class="card">
+      <h3>Books Dashboard</h3>
+      <button onclick="getAllBooks()">📖 Load Books</button>
+      <p>💡 Click a row to auto-fill the update form.</p>
+      <table id="booksTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Status</th>
+            <th>Borrower User ID</th>
+            <th>Borrower Name</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Add Book -->
+    <div class="card">
+      <h3>Add Book</h3>
+      <div class="form-group">
+        <input type="text" id="bookName" placeholder="Book Name">
+        <input type="text" id="authorName" placeholder="Author Name">
+        <input type="number" id="yearOfPublication" placeholder="Year of Publication">
+      </div>
+      <button onclick="saveBook()">💾 Save Book</button>
+    </div>
+
+    <!-- Update Book -->
+    <div class="card">
+      <h3>Update Book</h3>
+      <div class="form-group">
+        <input type="text" id="updateId" placeholder="Book ID (auto-filled)" readonly>
+        <input type="text" id="updateBookName" placeholder="Book Name">
+        <input type="text" id="updateAuthorName" placeholder="Author Name">
+        <input type="number" id="updateYear" placeholder="Year of Publication">
+      </div>
+      <button onclick="updateBook()">✏️ Update Book</button>
+    </div>
+
+    <!-- Delete Book -->
+    <div class="card">
+      <h3>Delete Book</h3>
+      <div class="form-group">
+      <input type="text" id="deleteBookId" placeholder="Book ID">
+      </div>
+      <button onclick="deleteBook()">🗑️ Delete Book</button>
+    </div>
+
+    <!-- Borrow Book -->
+    <div class="card">
+      <h3>Borrow Book</h3>
+      <div class="form-group">
+      <input type="text" id="borrowUserId" placeholder="User ID">
+      <input type="text" id="borrowBookId" placeholder="Book ID">
+      </div>
+      <button onclick="borrowBook()">📕 Borrow Book</button>
+    </div>
+
+    <!-- Return Book -->
+    <div class="card">
+      <h3>Return Book</h3>
+      <div class="form-group">
+      <input type="text" id="returnBookId" placeholder="Book ID">
+      </div>
+      <button onclick="returnBook()">📗 Return Book</button>
+    </div>
+
+    <!-- Users Dashboard -->
+    <div class="card">
+      <h3>Users Dashboard</h3>
+      <button onclick="getAllUsers()">👤 Load Users</button>
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Add User -->
+    <div class="card">
+      <h3>Add User</h3>
+      <div class="form-group">
+        <input type="text" id="userName" placeholder="User Name">
+      </div>
+      <button onclick="saveUser()">💾 Save User</button>
+    </div>
+
+    <!-- Delete User -->
+    <div class="card">
+      <h3>Delete User</h3>
+      <div class="form-group">
+      <input type="number" id="deleteUserId" placeholder="User ID">
+      </div>
+      <button onclick="deleteUser()">🗑️ Delete User</button>
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8080/books";
+    const USER_API = "http://localhost:8080/books/users";
+
+    // Helper to clear inputs
+    function clearInputs(...ids) {
+      ids.forEach(id => document.getElementById(id).value = "");
+    }
+
+    async function getAllBooks() {
+      try {
+        const res = await fetch(`${API_BASE}/all`);
+        const books = await res.json();
+        const tbody = document.querySelector("#booksTable tbody");
+        tbody.innerHTML = "";
+        books.forEach(book => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${book.id}</td>
+            <td>${book.bookName}</td>
+            <td>${book.authorName}</td>
+            <td>${book.yearOfPublication}</td>
+            <td class="${book.borrowedBook ? "status-borrowed" : "status-available"}">
+              ${book.borrowedBook ? "Borrowed" : "Available"}
+            </td>
+            <td>${book.borrowedBook ? book.borrowedBy.id : "-"}</td>
+            <td>${book.borrowedBook ? book.borrowedBy.userName : "-"}</td>
+          `;
+          row.addEventListener("click", () => {
+            document.querySelectorAll("#booksTable tr").forEach(r => r.classList.remove("highlight-row"));
+            row.classList.add("highlight-row");
+            document.getElementById("updateId").value = book.id;
+            document.getElementById("updateBookName").value = book.bookName;
+            document.getElementById("updateAuthorName").value = book.authorName;
+            document.getElementById("updateYear").value = book.yearOfPublication;
+          });
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        alert("Error fetching books: " + err);
+      }
+    }
+
+    async function saveBook() {
+      const book = {
+        bookName: document.getElementById("bookName").value,
+        authorName: document.getElementById("authorName").value,
+        yearOfPublication: document.getElementById("yearOfPublication").value
+      };
+      await fetch(`${API_BASE}/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book)
+      });
+      alert("✅ Book saved!");
+      clearInputs("bookName","authorName","yearOfPublication");
+      getAllBooks();
+    }
+
+    async function updateBook() {
+      const book = {
+        id: document.getElementById("updateId").value,
+        bookName: document.getElementById("updateBookName").value,
+        authorName: document.getElementById("updateAuthorName").value,
+        yearOfPublication: document.getElementById("updateYear").value
+      };
+      await fetch(`${API_BASE}/update/${book.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book)
+      });
+      alert("✏️ Book updated!");
+      clearInputs("updateId","updateBookName","updateAuthorName","updateYear");
+      getAllBooks();
+    }
+
+    async function deleteBook() {
+      const id = document.getElementById("deleteBookId").value;
+      await fetch(`${API_BASE}/delete/${id}`, { method: "DELETE" });
+      alert("🗑️ Book deleted!");
+      clearInputs("deleteBookId");
+      getAllBooks();
+    }
+
+    async function borrowBook() {
+      const userId = document.getElementById("borrowUserId").value;
+      const bookId = document.getElementById("borrowBookId").value;
+      await fetch(`${API_BASE}/borrow/${userId}/${bookId}`, { method: "PATCH" });
+      alert("📕 Book borrowed!");
+      clearInputs("borrowUserId","borrowBookId");
+      getAllBooks();
+    }
+
+    async function returnBook() {
+      const bookId = document.getElementById("returnBookId").value;
+      await fetch(`${API_BASE}/return/${bookId}`, { method: "PATCH" });
+      alert("📗 Book returned!");
+      clearInputs("returnBookId");
+      getAllBooks();
+    }
+
+    async function getAllUsers() {
+      try {
+        const res = await fetch(`${USER_API}/all`);
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const users = await res.json();
+        const tbody = document.getElementById("usersTableBody");
+        tbody.innerHTML = "";
+        users.forEach(user => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${user.id}</td><td>${user.userName}</td>`;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        alert("Error fetching users: " + err.message);
+      }
+    }
+
+    async function saveUser() {
+      const user = { userName: document.getElementById("userName").value };
+      if (!user.userName) { alert("⚠️ Please enter a name"); return; }
+      await fetch(`${USER_API}/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user)
+      });
+      alert("✅ User saved!");
+      clearInputs("userName");
+      getAllUsers();
+    }
+
+    async function deleteUser() {
+      const id = document.getElementById("deleteUserId").value;
+      if (!id) { alert("⚠️ Please enter a user ID"); return; }
+      await fetch(`${USER_API}/delete/${id}`, { method: "DELETE" });
+      alert("🗑️ User deleted!");
+      clearInputs("deleteUserId");
+      getAllUsers();
+    }
+  </script>
+</body>
+</html>

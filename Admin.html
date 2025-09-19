@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <link rel="stylesheet" href="Admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div id="logged-in" class="logged-in-section" style="display: none;">
+            <h2>Welcome! You are logged in.</h2>
+            <button onclick="logout()" class="btn logout-btn">Logout</button>
+        </div>
+        <div id="forms" class="forms-container">
+            <div id="login-form" class="form-card">
+                <h2>Login</h2>
+                <form onsubmit="login(event)">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <p>Not registered? <a href="#" onclick="toggleForm('register')">Register here</a></p>
+            </div>
+            <div id="register-form" class="form-card" style="display: none;">
+                <h2>Register</h2>
+                <form onsubmit="register(event)">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="register-Adminname" placeholder="Admin Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="register-email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="register-password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                </form>
+                <p>Already registered? <a href="#" onclick="toggleForm('login')">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="Admin.js"></script>
+</body>
+</html>
